@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Informe TF-IDF - Verniano Tomás</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Fira+Code:wght@400&display=swap');
+        
+        :root {
+            --primary: #4834d4;
+            --secondary: #686de0;
+            --accent: #eb4d4b;
+            --text: #2f3542;
+            --light-bg: #f1f2f6;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #ced6e0;
+            margin: 0;
+            padding: 20px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        h1 { margin: 0; color: var(--primary); font-size: 28pt; text-transform: uppercase; }
+        .student-info { font-weight: bold; color: var(--secondary); margin-top: 10px; font-size: 1.3em; }
+
+        h2 { color: var(--primary); border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-top: 30px; }
+        
+        .corpus-display {
+            background: #2f3542;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 9pt;
+            white-space: pre-wrap;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 8pt;
+        }
+
+        .freq-section {
+            margin: 25px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .freq-row {
+            display: flex;
+            align-items: center;
+            background: #f1f2f6;
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid #dcdde1;
+        }
+
+        .freq-label {
+            width: 180px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .freq-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .tag-unique {
+            background: var(--accent);
+            color: white;
+            padding: 4px 15px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .repeat-box {
+            background: #fff5f5;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #feb2b2;
+            margin-top: 15px;
+        }
+
+        .repeat-item { margin-bottom: 5px; font-size: 0.95em; }
+        .repeat-item b { color: var(--accent); }
+
+        .table-wrapper { overflow: auto; max-height: 600px; margin: 25px 0; border: 1px solid #eee; }
+        table { width: 100%; border-collapse: collapse; font-size: 8pt; }
+        th { background: var(--primary); color: white; padding: 10px; position: sticky; top: 0; z-index: 10; }
+        td { padding: 6px; border-bottom: 1px solid #eee; text-align: center; }
+        .term-col { text-align: left; font-weight: bold; background: #fdfdfd; position: sticky; left: 0; z-index: 5; color: var(--primary); }
+        .zero { color: #d1d8e0; }
+
+        .obs-box { background: #f9f9f9; padding: 25px; border: 1px solid #ddd; border-radius: 8px; margin-top: 20px; }
+        .obs-box b { color: var(--primary); }
+
+        footer { margin-top: 40px; text-align: center; font-size: 0.9em; color: #7f8c8d; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Informe TF-IDF</h1>
+        <div class="student-info">Alumno: Verniano Tomas</div>
+    </header>
+
+    <h2>1. Corpus Procesado</h2>
+    <div class="corpus-display">
+1. python interpret high-level language cplus compile low-level language
+2. javascript run web browser python use various application include data science artificial intelligence
+3. javascript dynamically weakly typed rust statically typed ensures great data security
+4. python javascript interpret language java cplus rust require compilation execution
+5. javascript widely use web development go ideal server cloud application
+6. python slow cplus rust due interpret nature
+7. javascript strong ecosystem node.js backend development python widely use data science
+8. javascript require compilation cplus rust require code compilation execution
+9. python javascript large community extensive number available library
+10. python ideal beginner rust cplus suitable experienced programmer</div>
+
+    <h2>2. Diccionario</h2>
+    <div class="vocab-grid">
+        <span>application</span> <span>artificial</span> <span>available</span> <span>backend</span> <span>beginner</span>
+        <span>browser</span> <span>characteristics</span> <span>cloud</span> <span>code</span> <span>community</span>
+        <span>compilation</span> <span>compile</span> <span>cplus</span> <span>data</span> <span>development</span>
+        <span>due</span> <span>dynamically</span> <span>ecosystem</span> <span>ensures</span> <span>execution</span>
+        <span>experienced</span> <span>extensive</span> <span>go</span> <span>great</span> <span>high-level</span>
+        <span>ideal</span> <span>include</span> <span>intelligence</span> <span>interpret</span> <span>java</span>
+        <span>javascript</span> <span>language</span> <span>large</span> <span>library</span> <span>low-level</span>
+        <span>nature</span> <span>node.js</span> <span>number</span> <span>programmer</span> <span>programming</span>
+        <span>python</span> <span>require</span> <span>run</span> <span>rust</span> <span>science</span>
+        <span>security</span> <span>server</span> <span>slow</span> <span>statically</span> <span>strong</span>
+        <span>suitable</span> <span>typed</span> <span>use</span> <span>various</span> <span>weakly</span>
+        <span>web</span> <span>widely</span>
+    </div>
+
+    <h2>3. Frecuencia</h2>
+    <div class="freq-section">
+        <div class="freq-row">
+            <div class="freq-label">7 apariciones:</div>
+            <div class="freq-tags"><span class="tag">python</span> <span class="tag">javascript</span></div>
+        </div>
+        <div class="freq-row">
+            <div class="freq-label">5 apariciones:</div>
+            <div class="freq-tags"><span class="tag">rust</span> <span class="tag">cplus</span></div>
+        </div>
+        <div class="freq-row">
+            <div class="freq-label">3 apariciones:</div>
+            <div class="freq-tags"><span class="tag">interpret</span> <span class="tag">language</span></div>
+        </div>
+        <div class="freq-row">
+            <div class="freq-label">Palabra que menos aparece:</div>
+            <div class="freq-tags"><span class="tag-unique">node.js</span></div>
+        </div>
+    </div>
+
+    <h2>4. Repeticiones por Oracion</h2>
+    <div class="repeat-box">
+        <div class="repeat-item"><b>Oración 1:</b> language (se menciona 2 veces)</div>
+        <div class="repeat-item"><b>Oración 3:</b> typed (se menciona 2 veces)</div>
+        <div class="repeat-item"><b>Oración 8:</b> compilation (se menciona 2 veces), require (se menciona 2 veces)</div>
+    </div>
+
+    <h2>5. Matriz Vectorial</h2>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Término</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="term-col">application</td><td class="zero">0.0</td><td>0.23</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.34</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">artificial</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">available</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.37</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">backend</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.29</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">beginner</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.33</td></tr>
+                <tr><td class="term-col">browser</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">characteristics</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">cloud</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.34</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">code</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.31</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">community</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.37</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">compilation</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.38</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.62</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">compile</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">cplus</td><td>0.17</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.25</td><td class="zero">0.0</td><td>0.24</td><td class="zero">0.0</td><td>0.20</td><td class="zero">0.0</td><td>0.24</td></tr>
+                <tr><td class="term-col">data</td><td class="zero">0.0</td><td>0.19</td><td>0.24</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.24</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">development</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.29</td><td class="zero">0.0</td><td>0.24</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">due</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.34</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">dynamically</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">ecosystem</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.29</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">ensures</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">execution</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.38</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.31</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">experienced</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.33</td></tr>
+                <tr><td class="term-col">extensive</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.37</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">go</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.34</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">great</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">high-level</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">ideal</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.34</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.30</td></tr>
+                <tr><td class="term-col">include</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">intelligence</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">interpret</td><td>0.22</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.31</td><td class="zero">0.0</td><td>0.30</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">java</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.38</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">javascript</td><td class="zero">0.0</td><td>0.12</td><td>0.15</td><td>0.20</td><td>0.18</td><td class="zero">0.0</td><td>0.15</td><td>0.16</td><td>0.21</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">language</td><td>0.54</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.38</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">large</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.37</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">library</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.37</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">low-level</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">nature</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.34</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">node.js</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.29</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">number</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.37</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">programmer</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.33</td></tr>
+                <tr><td class="term-col">programming</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">python</td><td>0.14</td><td>0.12</td><td class="zero">0.0</td><td>0.20</td><td class="zero">0.0</td><td>0.19</td><td>0.15</td><td class="zero">0.0</td><td>0.21</td><td>0.19</td></tr>
+                <tr><td class="term-col">require</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.38</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.62</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">run</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">rust</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.19</td><td>0.25</td><td class="zero">0.0</td><td>0.24</td><td class="zero">0.0</td><td>0.20</td><td class="zero">0.0</td><td>0.24</td></tr>
+                <tr><td class="term-col">science</td><td class="zero">0.0</td><td>0.23</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.29</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">security</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">server</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.34</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">slow</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.34</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">statically</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">strong</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.29</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">suitable</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.33</td></tr>
+                <tr><td class="term-col">typed</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.48</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">use</td><td class="zero">0.0</td><td>0.19</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.28</td><td class="zero">0.0</td><td>0.24</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">various</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">weakly</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.27</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">web</td><td class="zero">0.0</td><td>0.23</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.34</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+                <tr><td class="term-col">widely</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td><td>0.29</td><td class="zero">0.0</td><td>0.24</td><td class="zero">0.0</td><td class="zero">0.0</td><td class="zero">0.0</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>6. Observacion General</h2>
+    <div class="obs-box">
+        <p>Los resultados obtenidos en este análisis son el producto de un pipeline estructurado de Procesamiento de Lenguaje Natural (NLP). El proceso se desglosa en los siguientes puntos críticos:</p>
+        <ul>
+            <li><b>Reducción de Dimensionalidad:</b> Mediante la lematización y eliminación de <i>stopwords</i>, transformamos un texto humano en un conjunto de términos con carga semántica pura, resultando en un vocabulario de 57 palabras clave.</li>
+            <li><b>Análisis Local vs. Global (TF):</b> Se identificó que términos como "language" o "compilation" dominan ciertas oraciones debido a su repeticiones internas (TF alto), lo cual define el tema específico de esa oración.</li>
+            <li><b>Penalización por Frecuencia Documental (IDF):</b> Palabras como "python" y "javascript", aunque son las más frecuentes del corpus global, ven su peso reducido en la matriz TF-IDF para permitir que el modelo se enfoque en lo que hace única a cada oración.</li>
+            <li><b>Interpretación Vectorial:</b> Los valores vectoriales actúan como descriptores principales de los documentos analizados, permitiendo una posterior clasificación automatizada basándose en la relevancia estadística de cada término.</li>
+        </ul>
+    </div>
+
+    <footer>
+        TF-IDF
+    </footer>
+</div>
+
+</body>
+</html>
